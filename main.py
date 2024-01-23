@@ -11,8 +11,8 @@ screen.tracer(0)
 paddle = Paddle()
 
 screen.listen()
-screen.onkey(key='Left', fun=paddle.move_left)
-screen.onkey(key='Right', fun=paddle.move_right)
+screen.onkeypress(key='Left', fun=paddle.move_left)
+screen.onkeypress(key='Right', fun=paddle.move_right)
 
 
 game_is_on = True
