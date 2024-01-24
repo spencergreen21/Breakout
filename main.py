@@ -14,6 +14,9 @@ colors = {
 hits_to_increase_speed = [4, 12]
 current_hits = 0
 
+orange_hit = False
+red_hit = False
+
 cooldown_duration = 0.1  # Set the cooldown duration in seconds
 cooldown_end_time = 0
 
@@ -58,6 +61,15 @@ while game_is_on:
                     if current_hits in hits_to_increase_speed:
                         print("Increasing ball speed")
                         ball.increase_speed()
+
+                    if block.color() == 'orange' and not orange_hit:
+                        print("Increasing ball speed for orange")
+                        ball.increase_speed()
+                        orange_hit = True
+                    elif block.color() == 'red' and not red_hit:
+                        print("Increasing ball speed for red")
+                        ball.increase_speed()
+                        red_hit = True
 
     if cooldown_end_time < time():
         pass
