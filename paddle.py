@@ -21,5 +21,3 @@ class Paddle(Turtle):
         x = self.xcor()
         x += MOVE_DIST
         self.setx(x)
-
-

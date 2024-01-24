@@ -10,8 +10,6 @@ class Blocks(Turtle):
         self.penup()
         self.score = score
 
-    def hit(self):
+    def hit(self, ball):
         self.goto(1000, 1000)
         return self.score
-
-

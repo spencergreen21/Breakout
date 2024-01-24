@@ -1,9 +1,9 @@
-from turtle import Screen, Turtle
+from turtle import Screen
 from paddle import Paddle
 from ball import Ball
 from blocks import Blocks
 from scoreboard import Scoreboard
-import turtle as tr
+from time import time
 
 colors = {
     "red": 7,
@@ -11,6 +11,11 @@ colors = {
     "green": 3,
     "yellow": 1
 }
+hits_to_increase_speed = [4, 12]
+current_hits = 0
+
+cooldown_duration = 0.1  # Set the cooldown duration in seconds
+cooldown_end_time = 0
 
 screen = Screen()
 screen.bgcolor("black")
@@ -46,13 +51,22 @@ while game_is_on:
     for row in block_rows:
         for block in row:
             if ball.distance(block) < 30:
-                score = block.hit()
-                scoreboard.update_scoreboard(score)
-                ball.bounce_y()
+                if block.hit(ball):
+                    ball.bounce_y()
+                    scoreboard.update_scoreboard(block.score)
+                    current_hits += 1
+                    if current_hits in hits_to_increase_speed:
+                        print("Increasing ball speed")
+                        ball.increase_speed()
+
+    if cooldown_end_time < time():
+        pass
 
     if (
         ball.distance(paddle) < 30
         and -275 < ball.ycor() < -265  # Check if ball is within the height of the paddle
+        and abs(ball.xcor() - paddle.xcor()) < 50
+        and cooldown_end_time < time()
     ):
         ball.bounce_y()
 
@@ -64,5 +78,6 @@ while game_is_on:
 
     if ball.distance(paddle) < 30 and ball.ycor() > -250:
         ball.bounce_y()
+        cooldown_end_time = time() + cooldown_duration
 
 screen.exitonclick()
