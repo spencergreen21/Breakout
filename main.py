@@ -2,6 +2,7 @@ from turtle import Screen, Turtle
 from paddle import Paddle
 from ball import Ball
 from blocks import Blocks
+from scoreboard import Scoreboard
 import turtle as tr
 
 colors = {
@@ -19,6 +20,7 @@ screen.tracer(0)
 
 paddle = Paddle()
 ball = Ball()
+scoreboard = Scoreboard()
 
 block_rows = []
 for color, score in list(reversed(colors.items())):
@@ -31,24 +33,36 @@ for color, score in list(reversed(colors.items())):
             block_row.append(block)
     block_rows.append(block_row)
 
-
 screen.listen()
 screen.onkeypress(key='Left', fun=paddle.move_left)
 screen.onkeypress(key='Right', fun=paddle.move_right)
-
 
 game_is_on = True
 while game_is_on:
     screen.update()
     ball.move()
 
+    # Detect ball hit with blocks
+    for row in block_rows:
+        for block in row:
+            if ball.distance(block) < 30:
+                score = block.hit()
+                scoreboard.update_scoreboard(score)
+                ball.bounce_y()
+
+    if (
+        ball.distance(paddle) < 30
+        and -275 < ball.ycor() < -265  # Check if ball is within the height of the paddle
+    ):
+        ball.bounce_y()
+
     if ball.ycor() < -300:
         ball.reset_position()
 
+    if ball.xcor() < -530 or ball.xcor() > 530:
+        ball.bounce_x()
+
+    if ball.distance(paddle) < 30 and ball.ycor() > -250:
+        ball.bounce_y()
+
 screen.exitonclick()
-
-
-
-
-
-

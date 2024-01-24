@@ -1,6 +1,6 @@
 from turtle import Turtle
 
-MOVE_DIST = 70
+MOVE_DIST = 30
 
 
 class Paddle(Turtle):

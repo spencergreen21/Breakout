@@ -9,3 +9,9 @@ class Blocks(Turtle):
         self.shapesize(stretch_wid=0.5, stretch_len=3)  # Adjusted stretch_len to create shorter blocks
         self.penup()
         self.score = score
+
+    def hit(self):
+        self.goto(1000, 1000)
+        return self.score
+
+
