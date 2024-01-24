@@ -11,6 +11,7 @@ colors = {
     "green": 3,
     "yellow": 1
 }
+
 hits_to_increase_speed = [4, 12]
 current_hits = 0
 
@@ -44,6 +45,7 @@ for color, score in list(reversed(colors.items())):
 screen.listen()
 screen.onkeypress(key='Left', fun=paddle.move_left)
 screen.onkeypress(key='Right', fun=paddle.move_right)
+scoreboard.show_strikes()
 
 game_is_on = True
 while game_is_on:
@@ -53,7 +55,7 @@ while game_is_on:
     # Detect ball hit with blocks
     for row in block_rows:
         for block in row:
-            if ball.distance(block) < 30:
+            if ball.distance(block) < 25:
                 if block.hit(ball):
                     ball.bounce_y()
                     scoreboard.update_scoreboard(block.score)
@@ -71,9 +73,7 @@ while game_is_on:
                         ball.increase_speed()
                         red_hit = True
 
-    if cooldown_end_time < time():
-        pass
-
+    # Handle ball hitting the paddle
     if (
         ball.distance(paddle) < 30
         and -275 < ball.ycor() < -265  # Check if ball is within the height of the paddle
@@ -81,10 +81,18 @@ while game_is_on:
         and cooldown_end_time < time()
     ):
         ball.bounce_y()
+        cooldown_end_time = time() + cooldown_duration
 
+    # Handle ball reaching the bottom
     if ball.ycor() < -300:
-        ball.reset_position()
+        if scoreboard.strikes == 0:
+            game_is_on = False
+            scoreboard.game_over()
+        else:
+            ball.reset_position()
+            scoreboard.update_strikes()
 
+    # Handle ball going out of bounds
     if ball.xcor() < -530 or ball.xcor() > 530:
         ball.bounce_x()
 
